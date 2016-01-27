@@ -2,8 +2,11 @@ package org.usfirst.frc.team4068.robot.teamCode;
 
 import org.usfirst.frc.team4068.robot.Robot.RunCode;
 import org.usfirst.frc.team4068.robot.lib.Log;
+import org.usfirst.frc.team4068.robot.lib.References;
 import org.usfirst.frc.team4068.robot.lib.TargetingAssistant;
+import org.usfirst.frc.team4068.robot.lib.XboxController;
 import org.usfirst.frc.team4068.robot.lib.TargetingAssistant.LaunchVector;
+import org.usfirst.frc.team4068.robot.subsystems.DriveTrain;
 
 import com.ni.vision.NIVision;
 import com.ni.vision.NIVision.Image;
@@ -16,8 +19,20 @@ import edu.wpi.first.wpilibj.networktables.NetworkTable;
 import edu.wpi.first.wpilibj.networktables2.type.NumberArray;
 import edu.wpi.first.wpilibj.vision.AxisCamera;
 
-public class Teleop {
+public class Teleop implements Runnable {
     
+	 DriveTrain drive = References.DRIVE;
+	  
+	 XboxController driver = References.DRIVER;
+	
+	  private String thread;
+	 
+	  private boolean run = false;
+	  
+	  public Teleop(String thread){
+	        this.thread = thread;
+	  }
+	 
     static Talon lights = new Talon(0);
     static Servo xServo = new Servo(6);
     static Servo yServo = new Servo(7);
@@ -37,6 +52,15 @@ public class Teleop {
         
         //xServo.setAngle(0);
         //yServo.setAngle(200);
+    }
+    
+
+	private void tankDrive(){
+        double x = (driver.getLeftX()>=.15||driver.getLeftX()<=-.18 ? driver.getLeftX() : 0);
+        double y = (driver.getLeftY()>=.15||driver.getLeftY()<=-.15 ? driver.getLeftY() : 0);
+        
+        drive.tankDrive(x, y);
+        
     }
     
     static Image frame = NIVision.imaqCreateImage(NIVision.ImageType.IMAGE_RGB, 0);
@@ -98,6 +122,19 @@ public class Teleop {
         //206 cm distance
         //52 cm width
     }
+    
+    public void start(){
+        Thread teleop = new Thread(this);
+        teleop.start();
+        
+    }
+
+
+	@Override
+	public void run() {
+		// TODO Auto-generated method stub
+		
+	}
     
     /*
     @RunCode(loop=true)
