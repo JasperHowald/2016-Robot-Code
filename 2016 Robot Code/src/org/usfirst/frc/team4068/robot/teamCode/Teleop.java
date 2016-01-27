@@ -29,9 +29,7 @@ public class Teleop implements Runnable {
 	 
 	  private boolean run = false;
 	  
-	  public Teleop(String thread){
-	        this.thread = thread;
-	  }
+	 
 	 
     static Talon lights = new Talon(0);
     static Servo xServo = new Servo(6);
@@ -123,11 +121,8 @@ public class Teleop implements Runnable {
         //52 cm width
     }
     
-    public void start(){
-        Thread teleop = new Thread(this);
-        teleop.start();
         
-    }
+    
 
 
 	@Override
